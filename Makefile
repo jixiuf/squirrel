@@ -86,3 +86,13 @@ clean:
 	rm data/brise/* > /dev/null 2>&1 || true
 	rm data/opencc/*.ocd > /dev/null 2>&1 || true
 	$(MAKE) -C librime -f Makefile.xcode clean
+quick-install:
+	make debug
+	sudo make install-debug
+	sudo mv  /Library/Input\ Methods/Squirrel.app/Contents/MacOS/{Squirrel,Squirrel_bak}
+
+
+	echo "#!/bin/sh"|sudo tee /Library/Input\ Methods/Squirrel.app/Contents/MacOS/Squirrel
+	echo "exec /Library/Input\ Methods/Squirrel.app/Contents/MacOS/Squirrel_bak >/tmp/a.log 2>&1"|sudo tee -a /Library/Input\ Methods/Squirrel.app/Contents/MacOS/Squirrel
+	sudo chmod 755  /Library/Input\ Methods/Squirrel.app/Contents/MacOS/Squirrel
+	open /Library/Input\ Methods/Squirrel.app
