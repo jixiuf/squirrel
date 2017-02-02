@@ -6,6 +6,7 @@
 #import <rime_api.h>
 #import <sys/socket.h>
 #import <sys/un.h>
+#import <sys/stat.h>
 
 #define QLEN 8
 @implementation SquirrelDomainServer{
@@ -78,13 +79,18 @@
     printf("unixDomainServer().bind() error");
     return 2;
   }
+  //
+  if (chmod(un.sun_path, ACCESSPERMS) < 0) { // chmod 777 /tmp/squirrel.sock
+    return 3;
+  }
+
 
   printf("UNIX Domain Socket bound at:%s\n",domainSocketPath);
 
 
   if (listen(fd, QLEN) < 0) {
     printf("UNIX Domain Socket listen error\n");
-    return 3;
+    return 4;
   }
 
   while (1) {
